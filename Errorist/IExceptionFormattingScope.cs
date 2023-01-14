@@ -1,9 +1,9 @@
 ﻿namespace Errorist
 {
-    public interface IExceptionFormattingScope<TOutput>
+    public interface IExceptionFormattingScope<TOutput> : IDisposable
         where TOutput : class
     {
-        IExceptionConfigurationBuilder<TOutput, object> ConfigureDefault();
+        IExceptionConfigurationBuilder<TOutput, Exception> ConfigureDefault();
         IExceptionConfigurationBuilder<TOutput, TException> Configure<TException>()
             where TException : Exception;
         void Complete();
