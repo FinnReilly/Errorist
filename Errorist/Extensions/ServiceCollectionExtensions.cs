@@ -5,10 +5,11 @@ namespace Errorist.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddErrorConfiguration(this IServiceCollection services)
+        public static IServiceCollection AddErrorConfiguration<TOutput>(this IServiceCollection services)
+            where TOutput : class, new()
         {
-            services.AddScoped(typeof(IExceptionFormattingService<>), typeof(ExceptionFormattingService<>));
-            services.AddSingleton(typeof(IHttpContextConfigurator<>), typeof(DefaultContextConfigurator<>));
+            services.AddScoped<IExceptionFormattingService<TOutput>, ExceptionFormattingService<TOutput>>();
+            services.AddSingleton<IHttpContextConfigurator<TOutput>, DefaultContextConfigurator<TOutput>>();
 
             return services;
         }
