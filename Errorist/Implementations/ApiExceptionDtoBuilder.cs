@@ -5,57 +5,28 @@ namespace Errorist.Implementations
     public class ApiExceptionDtoConfigurationBuilder<TException> : ExceptionConfigurationBaseBuilder<ApiExceptionDto, TException, ApiExceptionDtoConfigurationBuilder<TException>>
         where TException : Exception
     {
-        public ApiExceptionDtoConfigurationBuilder() 
-            : base()
-        {
-        }
-
         ApiExceptionDtoConfigurationBuilder<TException> WithTitle(string title)
-        {
-            AddConfiguration((e, dto) => dto.Title = title);
-            return this;
-        }
+            => AddConfiguration((e, dto) => dto.Title = title);             
 
         ApiExceptionDtoConfigurationBuilder<TException> WithTitle(Func<TException, string> titleFactory)
-        {
-            AddConfiguration((e, dto) => dto.Title = titleFactory(e));
-            return this;
-        }
+            => AddConfiguration((e, dto) => dto.Title = titleFactory(e));
 
         ApiExceptionDtoConfigurationBuilder<TException> WithMessage(string message)
-        {
-            AddConfiguration((e, dto) => dto.Message = message);
-            return this;
-        }
+            => AddConfiguration((e, dto) => dto.Message = message);
 
         ApiExceptionDtoConfigurationBuilder<TException> WithMessage(Func<TException, string> messageFactory)
-        {
-            AddConfiguration((e, dto) => dto.Message = messageFactory(e));
-            return this;
-        }
+            => AddConfiguration((e, dto) => dto.Message = messageFactory(e));
 
         ApiExceptionDtoConfigurationBuilder<TException> WithUserAdvice(string userAdvice)
-        {
-            AddConfiguration((e, dto) => dto.UserAdvice = userAdvice);
-            return this;
-        }
+            => AddConfiguration((e, dto) => dto.UserAdvice = userAdvice);
 
         ApiExceptionDtoConfigurationBuilder<TException> WithUserAdvice(Func<TException, string> userAdviceFactory)
-        {
-            AddConfiguration((e, dto) => dto.UserAdvice = userAdviceFactory(e));
-            return this;
-        }
+            => AddConfiguration((e, dto) => dto.UserAdvice = userAdviceFactory(e));
 
         ApiExceptionDtoConfigurationBuilder<TException> WithStatusCode(int statusCode)
-        {
-            AddConfiguration((e, dto) => dto.StatusCode = statusCode);
-            return this;
-        }
+            => AddConfiguration((e, dto) => dto.StatusCode = statusCode);
 
         ApiExceptionDtoConfigurationBuilder<TException> WithStatusCode(Func<TException, int> statusCodeFactory)
-        {
-            AddConfiguration((e, dto) => dto.StatusCode = statusCodeFactory(e));
-            return this;
-        }
+            => AddConfiguration((e, dto) => dto.StatusCode = statusCodeFactory(e));
     }
 }

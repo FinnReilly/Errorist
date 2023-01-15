@@ -2,9 +2,8 @@
 
 namespace Errorist.Implementations
 {
-    public class ExceptionFormattingScope<TOutput, TBuilder> : IExceptionFormattingScope<TOutput>
+    public class ExceptionFormattingScope<TOutput> : IExceptionFormattingScope<TOutput>
         where TOutput : class
-        where TBuilder : IExceptionConfigurationBuilder<TOutput>, new()
     {
         private readonly Queue<ExceptionScopeConfiguration<TOutput>> _configurations;
         private readonly List<IExceptionConfigurationBuilder<TOutput>> _builders;
@@ -20,16 +19,33 @@ namespace Errorist.Implementations
 
         public void Complete() => _scopeComplete = true;
 
-        public IExceptionConfigurationBuilder<TOutput, TException> Configure<TException>() where TException : Exception
+        public GenericExceptionConfigurationBuilder<TOutput, TException> Configure<TException>() where TException : Exception
         {
-            var builder = new TBuilder().AsType<TException>();
+            var builder = new GenericExceptionConfigurationBuilder<TOutput, TException>();
             _builders.Add(builder);
             return builder;
         }
 
-        public IExceptionConfigurationBuilder<TOutput, Exception> ConfigureDefault()
+        public GenericExceptionConfigurationBuilder<TOutput, Exception> ConfigureDefault()
         {
-            var builder = new TBuilder().AsType<Exception>();
+            var builder = new GenericExceptionConfigurationBuilder<TOutput, Exception>();
+            _builders.Add(builder);
+            return builder;
+        }
+
+        public TBuilder ConfigureDefaultWithBuilder<TBuilder>()
+            where TBuilder : ExceptionConfigurationBaseBuilder<TOutput, Exception, TBuilder>, new()
+        {
+            var builder = new TBuilder();
+            _builders.Add(builder);
+            return builder;
+        }
+
+        public TBuilder ConfigureWithBuilder<TBuilder, TException>()
+            where TBuilder : ExceptionConfigurationBaseBuilder<TOutput, TException, TBuilder>, new()
+            where TException : Exception
+        {
+            var builder = new TBuilder();
             _builders.Add(builder);
             return builder;
         }

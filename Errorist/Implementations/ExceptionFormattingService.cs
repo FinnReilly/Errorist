@@ -2,9 +2,8 @@
 
 namespace Errorist.Implementations
 {
-    public class ExceptionFormattingService<TOutput, TBuilder> : IExceptionFormattingService<TOutput>
+    public class ExceptionFormattingService<TOutput> : IExceptionFormattingService<TOutput>
         where TOutput : class
-        where TBuilder : IExceptionConfigurationBuilder<TOutput>, new()
     {
         private readonly Queue<ExceptionScopeConfiguration<TOutput>> _configurations;
 
@@ -21,7 +20,7 @@ namespace Errorist.Implementations
         }
 
         public IExceptionFormattingScope<TOutput> GetScope() =>
-            new ExceptionFormattingScope<TOutput, TBuilder>(_configurations);
+            new ExceptionFormattingScope<TOutput>(_configurations);
 
         private TOutput ApplyConfigurations(TOutput output, Exception e, Type t)
         {
