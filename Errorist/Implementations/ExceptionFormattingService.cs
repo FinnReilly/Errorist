@@ -3,7 +3,7 @@
 namespace Errorist.Implementations
 {
     public class ExceptionFormattingService<TOutput> : IExceptionFormattingService<TOutput>
-        where TOutput : class
+        where TOutput : class, new()
     {
         private readonly Queue<ExceptionScopeConfiguration<TOutput>> _configurations;
 
