@@ -6,10 +6,15 @@ namespace Errorist.Implementations
         where TOutput : class, new()
     {
         private readonly Queue<ExceptionScopeConfiguration<TOutput>> _configurations;
+        private readonly IConfigurationBuilderFactory _configurationBuilderFactory;
 
-        public ExceptionFormattingService()
+        public ExceptionFormattingService(
+            IConfigurationBuilderFactory configurationBuilderFactory,
+            IExceptionFormattingGlobalScope<TOutput> globalScope)
         {
+            _configurationBuilderFactory = configurationBuilderFactory;
             _configurations = new Queue<ExceptionScopeConfiguration<TOutput>>();
+            _configurations.Enqueue(globalScope.Configuration);
         }
 
         public TOutput Configure(TOutput output, Exception exception)
@@ -19,8 +24,8 @@ namespace Errorist.Implementations
             return this.ApplyConfigurations(output, exception, exceptionType);
         }
 
-        public IExceptionFormattingScope<TOutput> GetScope() =>
-            new ExceptionFormattingScope<TOutput>(_configurations);
+        public IExceptionFormattingLocalScope<TOutput> GetScope() =>
+            new ExceptionFormattingLocalScope<TOutput>(_configurations, _configurationBuilderFactory);
 
         private TOutput ApplyConfigurations(TOutput output, Exception e, Type t)
         {

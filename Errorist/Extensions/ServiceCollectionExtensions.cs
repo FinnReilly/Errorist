@@ -10,6 +10,8 @@ namespace Errorist.Extensions
         {
             services.AddScoped<IExceptionFormattingService<TOutput>, ExceptionFormattingService<TOutput>>();
             services.AddSingleton<IHttpContextConfigurator<TOutput>, DefaultContextConfigurator<TOutput>>();
+            services.AddSingleton<IExceptionFormattingGlobalScope<TOutput>, ExceptionFormattingGlobalScope<TOutput>>();
+            services.AddSingleton<IConfigurationBuilderFactory, ConfigurationBuilderFactory>();
 
             return services;
         }
