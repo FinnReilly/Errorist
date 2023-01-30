@@ -32,6 +32,7 @@ namespace TestApplication.Controllers
                 .AddConfiguration((exception, dto) =>
                 {
                     dto.Title = "Error on forecast controller";
+                    dto.Message = $"{dto.Message}:{exception.Message}";
                 });
 
             var weatherForecast = Enumerable.Range(1, 5).Select(index => new WeatherForecast

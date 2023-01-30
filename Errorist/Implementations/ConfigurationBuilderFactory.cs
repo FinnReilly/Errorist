@@ -1,12 +1,14 @@
 ﻿using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Errorist.Implementations
 {
     public class ConfigurationBuilderFactory : IConfigurationBuilderFactory
     {
         private static Dictionary<Type, bool> _parameterlessConstructorExists = new Dictionary<Type, bool>();
-        private MethodInfo? _parameterlessConstructorMethodInfo = typeof(ConfigurationBuilderFactory).GetMethod(nameof(CreateWithParameterlessConstructor));
+        private MethodInfo? _parameterlessConstructorMethodInfo = typeof(ConfigurationBuilderFactory)
+            .GetMethod(
+                nameof(CreateWithParameterlessConstructor),
+                BindingFlags.NonPublic | BindingFlags.Instance);
         private static Dictionary<Type, MethodInfo?> _parameterlessConstructorMethods = new Dictionary<Type, MethodInfo?>();
 
         public TBuilder Create<TBuilder, TOutput, TException>()
@@ -25,7 +27,7 @@ namespace Errorist.Implementations
             {
                 if (!_parameterlessConstructorMethods.TryGetValue(type, out var method))
                 {
-                    method = _parameterlessConstructorMethodInfo?.MakeGenericMethod(type.GenericTypeArguments);
+                    method = _parameterlessConstructorMethodInfo?.MakeGenericMethod(type, typeof(TOutput), typeof(TException));
                     _parameterlessConstructorMethods[type] = method;
                 }
 

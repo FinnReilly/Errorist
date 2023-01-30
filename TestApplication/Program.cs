@@ -21,7 +21,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseErrorConfigurationMiddleware();
+app.UseErrorConfigurationMiddleware<ApiExceptionDto>();
 app.UseGlobalDefaultErrorConfigurationWithBuilder<ApiExceptionDtoConfigurationBuilder<Exception>, ApiExceptionDto>()
     .WithStatusCode(500)
     .WithMessage("Something went wrong")

@@ -7,12 +7,9 @@ namespace Errorist.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseErrorConfigurationMiddleware(this IApplicationBuilder builder)
-        {
-            var type = builder.GetOutputType();
-            var middlewareType = typeof(ExceptionHandlingMiddleware<>).MakeGenericType(type);
-            return builder.UseMiddleware(middlewareType);
-        }
+        public static IApplicationBuilder UseErrorConfigurationMiddleware<TOutput>(this IApplicationBuilder builder)
+            where TOutput : class, new()
+            => builder.UseMiddleware<ExceptionHandlingMiddleware<TOutput>>();
 
         public static GenericExceptionConfigurationBuilder<TOutput, TException> UseGlobalErrorConfiguration<TOutput, TException>(this IApplicationBuilder builder)
             where TOutput : class
@@ -41,18 +38,5 @@ namespace Errorist.Extensions
             => builder.ApplicationServices
                 .GetRequiredService<IExceptionFormattingGlobalScope<TOutput>>()
                 .ConfigureDefaultWithBuilder<TBuilder>();
-
-        private static Type GetOutputType(this IApplicationBuilder builder)
-        {
-            var configuredErrorConfigService = builder.ApplicationServices.GetRequiredService(typeof(IExceptionFormattingService<>));
-            if (configuredErrorConfigService != null)
-            {
-                return configuredErrorConfigService.GetType().GetGenericArguments().First();
-            }
-            
-            throw new InvalidOperationException(
-                "No error configuration services have been registered -" +
-                " please call services.AddErrorConfiguration<TOutput>() in your service configuration code.");
-        }
     }
 }
