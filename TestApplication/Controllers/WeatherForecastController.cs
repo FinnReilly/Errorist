@@ -1,6 +1,7 @@
 using Errorist;
 using Errorist.Models;
 using Microsoft.AspNetCore.Mvc;
+using TestApplication.Services;
 
 namespace TestApplication.Controllers
 {
@@ -15,17 +16,20 @@ namespace TestApplication.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IExceptionFormattingService<ApiExceptionDto> _exceptions;
+        private readonly IService _service;
 
         public WeatherForecastController(
             ILogger<WeatherForecastController> logger,
-            IExceptionFormattingService<ApiExceptionDto> formattingService)
+            IExceptionFormattingService<ApiExceptionDto> formattingService,
+            IService service)
         {
             _logger = logger;
             _exceptions = formattingService;
+            _service = service;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> Get(bool shouldFailInService)
         {
             using var exceptionScope = _exceptions.GetScope();
             exceptionScope.ConfigureDefault()
@@ -34,6 +38,11 @@ namespace TestApplication.Controllers
                     dto.Title = "Error on forecast controller";
                     dto.Message = $"{dto.Message}:{exception.Message}";
                 });
+
+            if (shouldFailInService)
+            {
+                _service.PerformFunction();
+            }
 
             var weatherForecast = Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

@@ -1,6 +1,8 @@
 using Errorist.Extensions;
 using Errorist.Implementations;
 using Errorist.Models;
+using TestApplication.Services;
+using TestApplication.Services.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddErrorConfiguration<ApiExceptionDto>();
+builder.Services.AddScoped<IService, Service>();
 
 var app = builder.Build();
 
