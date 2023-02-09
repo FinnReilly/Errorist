@@ -13,13 +13,17 @@ namespace TestApplication.Services.Implementation
             _exceptions = exceptions;
         }
 
-        public void PerformFunction()
+        public void PerformFunction(bool shouldFail)
         {
             using var errorScope = _exceptions.GetScope();
             errorScope.ConfigureDefaultWithBuilder<ApiExceptionDtoConfigurationBuilder<Exception>>()
                 .WithMessage("Something went wrong in an IService");
 
-            throw new NotImplementedException();
+            if (shouldFail)
+            {
+                throw new NotImplementedException();
+            }
+            errorScope.Complete();
         }
     }
 }

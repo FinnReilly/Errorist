@@ -2,6 +2,6 @@
 {
     public interface IService
     {
-        public void PerformFunction();
+        public void PerformFunction(bool shouldFail);
     }
 }

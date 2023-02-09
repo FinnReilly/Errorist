@@ -29,7 +29,7 @@ namespace TestApplication.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get(bool shouldFailInService)
+        public IEnumerable<WeatherForecast> Get(bool shouldFailInService, bool shouldFailInController)
         {
             using var exceptionScope = _exceptions.GetScope();
             exceptionScope.ConfigureDefault()
@@ -39,10 +39,7 @@ namespace TestApplication.Controllers
                     dto.Message = $"{dto.Message}:{exception.Message}";
                 });
 
-            if (shouldFailInService)
-            {
-                _service.PerformFunction();
-            }
+            _service.PerformFunction(shouldFailInService);
 
             var weatherForecast = Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -52,7 +49,11 @@ namespace TestApplication.Controllers
             })
             .ToArray();
 
-            throw new ArgumentException("WRONG!");
+            if (shouldFailInController)
+            {
+                throw new ArgumentException("WRONG!");
+            }
+            exceptionScope.Complete();
 
             return weatherForecast;
         }
