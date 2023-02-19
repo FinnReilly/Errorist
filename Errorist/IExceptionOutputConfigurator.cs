@@ -1,9 +1,8 @@
 ﻿namespace Errorist
 {
-    public interface IExceptionFormattingService<TOutput>
+    public interface IExceptionOutputConfigurator<TOutput>
         where TOutput : class, new()
     {
-        IExceptionFormattingLocalScope<TOutput> GetScope();
         TOutput Configure(TOutput output, Exception exception);
     }
 }

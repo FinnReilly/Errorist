@@ -2,7 +2,7 @@
 
 namespace Errorist.Implementations
 {
-    public class ExceptionFormattingService<TOutput> : IExceptionFormattingService<TOutput>
+    public class ExceptionFormattingService<TOutput> : IExceptionOutputConfigurator<TOutput>, IExceptionScopeProvider<TOutput>
         where TOutput : class, new()
     {
         private readonly Queue<ExceptionScopeConfiguration<TOutput>> _configurations;

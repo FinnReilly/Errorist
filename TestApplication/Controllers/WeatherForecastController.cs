@@ -15,12 +15,12 @@ namespace TestApplication.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-        private readonly IExceptionFormattingService<ApiExceptionDto> _exceptions;
+        private readonly IExceptionScopeProvider<ApiExceptionDto> _exceptions;
         private readonly IService _service;
 
         public WeatherForecastController(
             ILogger<WeatherForecastController> logger,
-            IExceptionFormattingService<ApiExceptionDto> formattingService,
+            IExceptionScopeProvider<ApiExceptionDto> formattingService,
             IService service)
         {
             _logger = logger;

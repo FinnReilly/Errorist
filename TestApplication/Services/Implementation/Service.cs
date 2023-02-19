@@ -6,9 +6,9 @@ namespace TestApplication.Services.Implementation
 {
     public class Service : IService
     {
-        private readonly IExceptionFormattingService<ApiExceptionDto> _exceptions;
+        private readonly IExceptionScopeProvider<ApiExceptionDto> _exceptions;
 
-        public Service(IExceptionFormattingService<ApiExceptionDto> exceptions)
+        public Service(IExceptionScopeProvider<ApiExceptionDto> exceptions)
         {
             _exceptions = exceptions;
         }

@@ -14,7 +14,7 @@ namespace Errorist.Middleware
 
         public async Task InvokeAsync(
             HttpContext context,
-            IExceptionFormattingService<TOutput> formattingService,
+            IExceptionOutputConfigurator<TOutput> formattingService,
             IHttpContextConfigurator<TOutput> contextConfigurator)
         {
             try
