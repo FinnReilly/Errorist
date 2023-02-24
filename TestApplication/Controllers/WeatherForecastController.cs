@@ -59,7 +59,6 @@ namespace TestApplication.Controllers
             {
                 throw new ArgumentException("WRONG!");
             }
-            exceptionScope.Complete();
 
             return weatherForecast;
         }

@@ -8,7 +8,7 @@ namespace Errorist.Implementations
         private readonly IScopedConfigurationQueue<TOutput> _configurations;
         private readonly IConfigurationBuilderFactory _configurationBuilderFactory;
         private readonly ScopedExceptionConfigurationCollection<TOutput> _configurationCollection;
-        private bool _scopeComplete = false;
+        private bool _scopeComplete = true;
 
         public ExceptionFormattingLocalScope(
             IScopedConfigurationQueue<TOutput> configurations,
@@ -17,9 +17,13 @@ namespace Errorist.Implementations
             _configurationBuilderFactory = configurationBuilderFactory;
             _configurations = configurations;
             _configurationCollection = new ScopedExceptionConfigurationCollection<TOutput>();
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         }
 
-        public void Complete() => _scopeComplete = true;
+        private void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        {
+            _scopeComplete = false;
+        }
 
         public GenericExceptionConfigurationBuilder<TOutput, TException> Configure<TException>() where TException : Exception
         {

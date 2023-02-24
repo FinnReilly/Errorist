@@ -23,7 +23,6 @@ namespace TestApplication.Services.Implementation
             {
                 throw new NotImplementedException();
             }
-            errorScope.Complete();
         }
     }
 }
