@@ -5,7 +5,7 @@ namespace Errorist.Implementations
     public class ConfigurationBuilderFactory : IConfigurationBuilderFactory
     {
         private static Dictionary<Type, bool> _parameterlessConstructorExists = new Dictionary<Type, bool>();
-        private MethodInfo? _parameterlessConstructorMethodInfo = typeof(ConfigurationBuilderFactory)
+        private static MethodInfo? _parameterlessConstructorMethodInfo = typeof(ConfigurationBuilderFactory)
             .GetMethod(
                 nameof(CreateWithParameterlessConstructor),
                 BindingFlags.NonPublic | BindingFlags.Instance);
