@@ -3,15 +3,15 @@
 namespace Errorist.Implementations
 {
     public class ExceptionFormattingLocalScope<TOutput> : IExceptionFormattingLocalScope<TOutput>
-        where TOutput : class
+        where TOutput : class, new()
     {
-        private readonly Queue<ExceptionScopeConfiguration<TOutput>> _configurations;
+        private readonly IScopedConfigurationQueue<TOutput> _configurations;
         private readonly IConfigurationBuilderFactory _configurationBuilderFactory;
         private readonly ScopedExceptionConfigurationCollection<TOutput> _configurationCollection;
         private bool _scopeComplete = false;
 
         public ExceptionFormattingLocalScope(
-            Queue<ExceptionScopeConfiguration<TOutput>> configurations,
+            IScopedConfigurationQueue<TOutput> configurations,
             IConfigurationBuilderFactory configurationBuilderFactory)
         {
             _configurationBuilderFactory = configurationBuilderFactory;
