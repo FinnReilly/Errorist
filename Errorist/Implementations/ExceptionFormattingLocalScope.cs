@@ -20,11 +20,6 @@ namespace Errorist.Implementations
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         }
 
-        private void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
-        {
-            _scopeComplete = false;
-        }
-
         public GenericExceptionConfigurationBuilder<TOutput, TException> Configure<TException>() where TException : Exception
         {
             var builder = new GenericExceptionConfigurationBuilder<TOutput, TException>();
@@ -63,5 +58,8 @@ namespace Errorist.Implementations
                 _configurations.Enqueue(_configurationCollection.ResolvedConfiguration);
             }
         }
+
+        private void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+            => _scopeComplete = false;
     }
 }

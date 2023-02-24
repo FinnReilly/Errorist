@@ -11,13 +11,20 @@ namespace TestApplication.Controllers
     {
         private static readonly string[] Summaries = new[]
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm"
+        };
+
+        private static readonly int[] Temperatures = new[]
+        {
+            -10, -3, 1, 5, 10, 18
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IExceptionScopeProvider<ApiExceptionDto> _exceptions;
         private readonly IService _service;
         private readonly ISingletonService _singletonService;
+
+        private readonly DateTime _standardTime = new DateTime(1918, 11, 11, 11, 00, 00);
 
         public WeatherForecastController(
             ILogger<WeatherForecastController> logger,
@@ -47,20 +54,19 @@ namespace TestApplication.Controllers
 
             _singletonService.PerformFunction(shouldFailInSingletonService);
 
-            var weatherForecast = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-
             if (shouldFailInController)
             {
                 throw new ArgumentException("WRONG!");
             }
 
-            return weatherForecast;
+            return Enumerable.Range(1, 5)
+                .Select(index => new WeatherForecast
+                {
+                    Date = _standardTime,
+                    TemperatureC = Temperatures[index],
+                    Summary = Summaries[index]
+                })
+                .ToArray();
         }
     }
 }
