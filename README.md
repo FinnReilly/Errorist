@@ -35,7 +35,8 @@ app.UseGlobalDefaultErrorConfiguration<ApiExceptionDto>()
 app.UseGlobalErrorConfiguration<ApiExceptionDto, AuthenticationException>()
     .AddConfiguration((e, dto) =>
     {
-        dto.StatusCode = 401
+        dto.StatusCode = 401,
+        dto.UserAdvice = "Try logging in"
     });
 ```
 If no further configuration is added beyond these global configurations, most users with an error will receive the following json (or similar) with a status code of 500:
