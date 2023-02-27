@@ -21,7 +21,7 @@ After the `builder.Build()` method has been called, you will need to add the mid
 app.UseErrorConfigurationMiddleware<ApiExceptionDto>();
 ```
 
-## Global configurations
+## Adding Global Configurations
 
 Whilst in the `Program` file, it is recommended that you add some Global configurations - these can then be overridden throughout the application as needed. For this you can use `app.UseGlobalDefaultErrorConfiguration<ApiExceptionDto>` for all exceptions, or `app.UseGlobalErrorConfiguration<ApiExceptionDto,TException>` for specific types.
 
@@ -98,7 +98,7 @@ and the following in the case of a `TaskCanceledException`:
 ```
 Any configurations defined using a configuration scope will be applied to exceptions thrown within that scope.
 
-**Important** - `IExceptionScopeProvider<TOutput>` is always scoped to the lifetime of the request.  If you wish to use configuration scopes within a Singleton service, you will do to inject an `IExceptionScopeProviderFactory<TOutput>` and use it as follows:
+**Important** - `IExceptionScopeProvider<TOutput>` is always scoped to the lifetime of the request.  If you wish to use configuration scopes within a Singleton service, you will need to inject an `IExceptionScopeProviderFactory<TOutput>` and use it as follows:
 ```
 using var exceptionScope = _providerFactory.CurrentProvider.GetScope();
 ```
