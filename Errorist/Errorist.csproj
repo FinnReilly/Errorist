@@ -12,6 +12,8 @@
     <RepositoryUrl>https://github.com/FinnReilly/Errorist</RepositoryUrl>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageTags>REST API;error handling;exception handling;aspnet 6</PackageTags>
+    <PackageReleaseNotes>* updates to documentation in README</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
