@@ -1,8 +1,11 @@
 # Errorist
+
 ## A compact and configurable package for formatting API exception output in .NET 6
 -----------------
 
-Errorist allows API developers to quickly configure the way that errors thrown in the application are displayed to the API consumer. Developers can alter output based on the type of exception, the controller or service it was thrown from, or specific attributes of the exception itself.  Use the built-in `ApiExceptionDto` or register your own output models.
+Errorist allows API developers to quickly configure the way that errors thrown in the application are displayed to the API consumer. Developers can alter output based on the type of exception, the controller or service it was thrown from, or specific attributes of the exception itself.  
+
+Use the built-in `ApiExceptionDto`, or register your own output models. Use your own builder classes to write clear and easily readable configurations.
 
 ## Getting started
 
@@ -17,6 +20,7 @@ After the `builder.Build()` method has been called, you will need to add the mid
 ```
 app.UseErrorConfigurationMiddleware<ApiExceptionDto>();
 ```
+
 ## Global configurations
 
 Whilst in the `Program` file, it is recommended that you add some Global configurations - these can then be overridden throughout the application as needed. For this you can use `app.UseGlobalDefaultErrorConfiguration<ApiExceptionDto>` for all exceptions, or `app.UseGlobalErrorConfiguration<ApiExceptionDto,TException>` for specific types.
@@ -55,6 +59,7 @@ Whereas those experiencing an AuthenticationException will receive the following
     "userAdvice": "Try logging in"
 }
 ```
+
 ## Configuration Scopes
 Errorist allows you to override global configurations and configure error output according to the controller or service method that an exception is thrown in.  In order to do so, you will need to inject the `IExceptionScopeProvider<TOutput>` dependency into the class or controller, and create an `IExceptionFormattingScope<TOutput>` as follows:
 ```
@@ -97,3 +102,20 @@ Any configurations defined using a configuration scope will be applied to except
 ```
 using var exceptionScope = _providerFactory.CurrentProvider.GetScope();
 ```
+
+## Order of Precedence
+Within each scope (including the global scope) configurations are applied in the following order:
+
+1. The default configuration, if it exists
+2. The specific configuration for the type of exception thrown, if it exists
+
+The scopes themselves are then applied in the following order:
+
+1. The Global scope configured in `Program`
+2. The scope at the lowest level of the call stack (eg. if a configuration scope has been used within a method in your Repository layer)
+3. Each scope which is exited as the Exception moves up the call stack
+4. Finally, the scope which is configured the highest up the call stack is applied last
+
+Essentially, this means that your error output configurations will roughly follow the principle of 'Most Specific Wins'. 
+
+It is *not* recommended to use nested configuration scopes in the same method, as this will cause the outer scope to override the configurations made in the inner.
