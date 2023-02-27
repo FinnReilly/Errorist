@@ -14,6 +14,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageTags>REST API;error handling;exception handling;aspnet 6</PackageTags>
     <PackageReleaseNotes>* updates to documentation in README</PackageReleaseNotes>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
