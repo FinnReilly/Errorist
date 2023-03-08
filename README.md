@@ -21,6 +21,18 @@ After the `builder.Build()` method has been called, you will need to add the mid
 app.UseErrorConfigurationMiddleware<ApiExceptionDto>();
 ```
 
+## Using your own output types
+
+You may wish to use your own output type, rather than `ApiExceptionDto` - In order to do so, simply register services and activate middleware using your output type as a type argument:
+
+```
+builder.Services.AddErrorConfiguration<MyCustomDto>();
+var app = builder.build();
+app.UseErrorConfigurationMiddleware<MyCustomDto>();
+```
+
+*Important* - if you want to be able to set the Http status code of the returned model, your output type will need to implement the `IHasStatusCode` interface.
+
 ## Adding Global Configurations
 
 Whilst in the `Program` file, it is recommended that you add some Global configurations - these can then be overridden throughout the application as needed. For this you can use `app.UseGlobalDefaultErrorConfiguration<ApiExceptionDto>` for all exceptions, or `app.UseGlobalErrorConfiguration<ApiExceptionDto,TException>` for specific types.
@@ -119,3 +131,32 @@ The scopes themselves are then applied in the following order:
 Essentially, this means that your error output configurations will roughly follow the principle of 'Most Specific Wins'. 
 
 It is *not* recommended to use nested configuration scopes in the same method, as this will cause the outer scope to override the configurations made in the inner.
+
+## Using your own builders
+
+When adding configurations, it is possible to specify the type of builder that you want to use to build your configuration.  This allows developers to create configurations in a clean, fluent style.  Take this example that sets a default configuration in a local scope with the built-in `ApiExceptionDtoBuilder<TException>`:
+
+`````
+errorScope.ConfigureDefaultWithBuilder<ApiExceptionDtoConfigurationBuilder<Exception>>()
+    .WithMessage("Something went wrong in an IService")
+    .WithUserAdvice("Show this to someone technical");
+`````
+The methods which are available for specifying the builder to use in exception scopes are:
+* `ConfigureDefaultWithBuilder<TBuilder>`
+* `ConfigureWithBuilder<TBuilder, TException>`
+When configuring exceptions globally in `Program`, you can use the following extension methods on `IApplicationBuilder`:
+* `UseGlobalDefaultErrorConfigurationWithBuilder<TBuilder, TOutput>`
+* `UseGlobalErrorConfigurationWithBuilder<TBuilder, TOutput, TException>`
+
+The `TBuilder` generic type argument can take any builder class that inherits from `ExceptionConfigurationBaseBuilder<TOutput, TException, TBuilder>`.
+
+### Custom Builder Guidelines
+
+1) When writing methods in a custom builder, you will need to call `ExceptionConfigurationBaseBuilder<TOutput, TException, TBuilder>.AddConfiguration(Action<TException, TOutput> configurationAction)` in order to make the middleware aware of the configuration action in question.  Here is an example from `ApiExceptionDtoBuilder<TException>`:
+
+```
+public ApiExceptionDtoConfigurationBuilder<TException> WithMessage(string message)
+    => AddConfiguration((e, dto) => dto.Message = message);
+```
+2) It is recommended that each builder method returns the builder itself - this will allow developers to use it in a fluent style, rather than across several lines
+3) In order to use your own custom builders straight away, they will need to have a public parameterless constructor, or they will throw an error when used in code
