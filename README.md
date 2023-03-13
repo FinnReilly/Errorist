@@ -21,7 +21,7 @@ After the `builder.Build()` method has been called, you will need to add the mid
 app.UseErrorConfigurationMiddleware<ApiExceptionDto>();
 ```
 
-## Using your own output types
+### Using your own output types
 
 You may wish to use your own output type, rather than `ApiExceptionDto` - In order to do so, simply register services and activate middleware using your output type as a type argument:
 
