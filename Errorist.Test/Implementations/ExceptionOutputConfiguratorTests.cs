@@ -43,9 +43,10 @@ namespace Errorist.Test.Implementations
         public void Configure_AppliesConfigurationsInExpectedOrder(Exception exception, string expectedModelPropertyValue)
         {
             // Arrange
-            var globalConfig = new ExceptionScopeConfiguration<TestOutputType>();
-            var serviceLevelConfig = new ExceptionScopeConfiguration<TestOutputType>();
-            var controllerLevelConfig = new ExceptionScopeConfiguration<TestOutputType>();
+            var triggerException = new InvalidOperationException();
+            var globalConfig = ExceptionScopeConfiguration<TestOutputType>.AsGlobal();
+            var serviceLevelConfig = ExceptionScopeConfiguration<TestOutputType>.FromException(triggerException);
+            var controllerLevelConfig = ExceptionScopeConfiguration<TestOutputType>.FromException(triggerException);
             globalConfig.DefaultActions.Add((e, dto) => dto.ConfigurableMessage = "An exception was thrown");
             globalConfig.SpecificActions.Add(
                 typeof(InvalidOperationException),
