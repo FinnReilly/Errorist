@@ -14,11 +14,11 @@
         {
             DefaultActions = new List<Action<Exception, TOutput>>();
             SpecificActions = new Dictionary<Type, List<Action<Exception, TOutput>>>();
-            TriggeredByException = triggeringException;
+            TriggeringException = triggeringException;
         }
 
         public bool IsGlobal { get; }
-        public Exception? TriggeredByException { get; }
+        public Exception? TriggeringException { get; }
         public List<Action<Exception, TOutput>> DefaultActions { get; }
         public Dictionary<Type, List<Action<Exception, TOutput>>> SpecificActions { get; }
 
