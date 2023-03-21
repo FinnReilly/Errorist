@@ -58,6 +58,8 @@ namespace Errorist.Implementations
             {
                 _configurations.Enqueue(_configurationCollection.ResolveOnException(_lastThrownException));
             }
+
+            AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
         }
 
         private void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
