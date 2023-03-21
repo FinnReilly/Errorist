@@ -43,14 +43,16 @@ namespace Errorist.Test.Implementations
         public void Configure_AppliesConfigurationsInExpectedOrder(Exception exception, string expectedModelPropertyValue)
         {
             // Arrange
-            var triggerException = new InvalidOperationException();
+            var handledException = new DivideByZeroException();
             var globalConfig = ExceptionScopeConfiguration<TestOutputType>.AsGlobal();
-            var serviceLevelConfig = ExceptionScopeConfiguration<TestOutputType>.FromException(triggerException);
-            var controllerLevelConfig = ExceptionScopeConfiguration<TestOutputType>.FromException(triggerException);
+            var serviceLevelConfigForHandledError = ExceptionScopeConfiguration<TestOutputType>.FromException(handledException);
+            var serviceLevelConfig = ExceptionScopeConfiguration<TestOutputType>.FromException(exception);
+            var controllerLevelConfig = ExceptionScopeConfiguration<TestOutputType>.FromException(exception);
             globalConfig.DefaultActions.Add((e, dto) => dto.ConfigurableMessage = "An exception was thrown");
             globalConfig.SpecificActions.Add(
                 typeof(InvalidOperationException),
                 new List<Action<Exception, TestOutputType>> { (e, dto) => dto.ConfigurableMessage = "An InvalidOperationException was thrown" });
+            serviceLevelConfigForHandledError.DefaultActions.Add((e, dto) => dto.ConfigurableMessage = dto.ConfigurableMessage + " SHOULD NOT BE INCLUDED ");
             serviceLevelConfig.DefaultActions.Add((e, dto) => dto.ConfigurableMessage = dto.ConfigurableMessage + " in a service");
             serviceLevelConfig.SpecificActions.Add(
                 typeof(ArgumentNullException),
@@ -64,6 +66,7 @@ namespace Errorist.Test.Implementations
                 new List<Action<Exception, TestOutputType>> { (e, dto) => dto.ConfigurableMessage = dto.ConfigurableMessage + " The argument was null."});
 
             _outputQueue.Enqueue(globalConfig);
+            _outputQueue.Enqueue(serviceLevelConfigForHandledError);
             _outputQueue.Enqueue(serviceLevelConfig);
             _outputQueue.Enqueue(controllerLevelConfig);
 

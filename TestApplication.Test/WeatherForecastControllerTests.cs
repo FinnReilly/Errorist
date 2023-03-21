@@ -37,6 +37,22 @@ namespace TestApplication.Test
             (
                 "/weatherforecast?shouldFailInService=true",
                 "{\"Title\":\"Error on forecast controller\",\"Message\":\"Something went wrong in an IService:The method or operation is not implemented.\",\"UserAdvice\":\"Hang tight and we'll be right with you\"}",
+                HttpStatusCode.InternalServerError),
+            (
+                "/weatherforecast/withTryCatch",
+                "[{\"date\":\"1918-11-11T11:00:00\",\"temperatureC\":-3,\"temperatureF\":27,\"summary\":\"Bracing\"}," +
+                    "{\"date\":\"1918-11-11T11:00:00\",\"temperatureC\":1,\"temperatureF\":33,\"summary\":\"Chilly\"}," +
+                    "{\"date\":\"1918-11-11T11:00:00\",\"temperatureC\":5,\"temperatureF\":40,\"summary\":\"Cool\"}," +
+                    "{\"date\":\"1918-11-11T11:00:00\",\"temperatureC\":10,\"temperatureF\":49,\"summary\":\"Mild\"}," +
+                    "{\"date\":\"1918-11-11T11:00:00\",\"temperatureC\":18,\"temperatureF\":64,\"summary\":\"Warm\"}]",
+                HttpStatusCode.OK),
+            (
+                "/weatherforecast/withTryCatch?shouldFailTopLevel=true",
+                "{\"Title\":\"Error in GetWithTryCatch Endpoint\",\"Message\":\"Error in GetWithTryCatch Endpoint --> Something went wrong\",\"UserAdvice\":\"Hang tight and we'll be right with you\"}",
+                HttpStatusCode.InternalServerError),
+            (
+                "/weatherforecast/withTryCatch?shouldFailInServiceAndRethrow=true",
+                "{\"Title\":\"Error in GetWithTryCatch Endpoint\",\"Message\":\"Error in GetWithTryCatch Endpoint --> Try catch service --> Something went wrong\",\"UserAdvice\":\"Hang tight and we'll be right with you\"}",
                 HttpStatusCode.InternalServerError)
         };
 
