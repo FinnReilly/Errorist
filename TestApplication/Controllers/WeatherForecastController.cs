@@ -86,7 +86,7 @@ namespace TestApplication.Controllers
 
             try
             {
-                _serviceWithTryCatch.PerformAction(shouldFailTopLevel || shouldFailInServiceAndRethrow);
+                _serviceWithTryCatch.PerformAction(shouldFailAfterTryCatch: true);
             }
             catch
             {
