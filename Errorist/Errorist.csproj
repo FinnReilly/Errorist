@@ -12,8 +12,10 @@
     <RepositoryUrl>https://github.com/FinnReilly/Errorist</RepositoryUrl>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageTags>REST API;error handling;exception handling;aspnet 6</PackageTags>
-    <PackageReleaseNotes>* updates to documentation in README</PackageReleaseNotes>
+    <PackageTags>REST API;error handling;exception handling;aspnet 6;error-handling;exception-handling</PackageTags>
+    <PackageReleaseNotes>* Ensures that configurations for errors which are caught are never applied to output dto
+* Improves and expands README documentation
+* Improves resource cleanup on local configuration scope exit</PackageReleaseNotes>
     <Version>1.0.2</Version>
     <AssemblyVersion>1.0.2</AssemblyVersion>
     <FileVersion>1.0.2</FileVersion>
