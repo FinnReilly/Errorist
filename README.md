@@ -158,5 +158,7 @@ The `TBuilder` generic type argument can take any builder class that inherits fr
 public ApiExceptionDtoConfigurationBuilder<TException> WithMessage(string message)
     => AddConfiguration((e, dto) => dto.Message = message);
 ```
-2) It is recommended that each builder method returns the builder itself - this will allow developers to use it in a fluent style, rather than across several lines
-3) In order to use your own custom builders straight away, they will need to have a public parameterless constructor, or they will throw an error when used in code
+2) It is recommended that each builder method returns the builder itself - this will allow developers to use it in a fluent style, rather than across several lines.
+3) In order to use your own custom builders straight away, they will need to have a public parameterless constructor, or they will throw an error at runtime. 
+If, however, you need to inject additional services into your builders, you can do so by writing your own implementation of the `IConfigurationBuilderFactory` interface.
+This will need to be registered *after* the call to `builder.Services.AddErrorConfiguration<TOutput>` in `Program`.
