@@ -22,6 +22,12 @@
             while (_configurations.Count > 0)
             {
                 var config = _configurations.Dequeue();
+
+                if (!config.IsGlobal && config.TriggeringException != e)
+                {
+                    continue;
+                }
+
                 foreach (var action in config.DefaultActions)
                 {
                     action.Invoke(e, output);

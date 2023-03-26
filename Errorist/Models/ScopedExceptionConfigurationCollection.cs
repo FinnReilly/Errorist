@@ -20,28 +20,31 @@
         public void AddBuilder(IExceptionConfigurationBuilder<TOutput> builder)
             => _builders.Add(builder);
 
-        public ExceptionScopeConfiguration<TOutput> ResolvedConfiguration
+        public ExceptionScopeConfiguration<TOutput> ResolveAsGlobal()
+            => ResolveConstructedConfiguration(() => ExceptionScopeConfiguration<TOutput>.AsGlobal());
+
+        public ExceptionScopeConfiguration<TOutput> ResolveOnException(Exception exception)
+            => ResolveConstructedConfiguration(() => ExceptionScopeConfiguration<TOutput>.FromException(exception));
+
+        private ExceptionScopeConfiguration<TOutput> ResolveConstructedConfiguration(Func<ExceptionScopeConfiguration<TOutput>> factoryFunc)
         {
-            get
+            if (_exceptionScopeConfiguration == null)
             {
-                if (_exceptionScopeConfiguration == null)
+                _exceptionScopeConfiguration = factoryFunc();
+                _exceptionScopeConfiguration.DefaultActions.AddRange(_defaultBuilders.SelectMany(b => b.Actions));
+                foreach (var builder in _builders)
                 {
-                    _exceptionScopeConfiguration = new ExceptionScopeConfiguration<TOutput>();
-                    _exceptionScopeConfiguration.DefaultActions.AddRange(_defaultBuilders.SelectMany(b => b.Actions));
-                    foreach(var builder in _builders)
+                    if (!_exceptionScopeConfiguration.SpecificActions.TryGetValue(builder.ExceptionType, out var actionList))
                     {
-                        if (!_exceptionScopeConfiguration.SpecificActions.TryGetValue(builder.ExceptionType, out var actionList))
-                        {
-                            actionList = new List<Action<Exception, TOutput>>();
-                            _exceptionScopeConfiguration.SpecificActions.Add(
-                                builder.ExceptionType,
-                                actionList);
-                        }
-                        actionList.AddRange(builder.Actions);
+                        actionList = new List<Action<Exception, TOutput>>();
+                        _exceptionScopeConfiguration.SpecificActions.Add(
+                            builder.ExceptionType,
+                            actionList);
                     }
+                    actionList.AddRange(builder.Actions);
                 }
-                return _exceptionScopeConfiguration;
             }
+            return _exceptionScopeConfiguration;
         }
     }
 }

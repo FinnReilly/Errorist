@@ -14,7 +14,7 @@ namespace Errorist.Implementations
             _configurationCollection = new ScopedExceptionConfigurationCollection<TOutput>();
         }
 
-        public ExceptionScopeConfiguration<TOutput> Configuration => _configurationCollection.ResolvedConfiguration;
+        public ExceptionScopeConfiguration<TOutput> Configuration => _configurationCollection.ResolveAsGlobal();
 
         public GenericExceptionConfigurationBuilder<TOutput, TException> Configure<TException>() where TException : Exception
         {

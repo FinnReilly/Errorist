@@ -9,6 +9,7 @@ namespace Errorist.Implementations
         private readonly IConfigurationBuilderFactory _configurationBuilderFactory;
         private readonly ScopedExceptionConfigurationCollection<TOutput> _configurationCollection;
         private bool _scopeComplete = true;
+        private Exception? _lastThrownException;
 
         public ExceptionFormattingLocalScope(
             IScopedConfigurationQueue<TOutput> configurations,
@@ -53,13 +54,18 @@ namespace Errorist.Implementations
 
         public void Dispose()
         {
-            if (!_scopeComplete)
+            if (!_scopeComplete && _lastThrownException != null)
             {
-                _configurations.Enqueue(_configurationCollection.ResolvedConfiguration);
+                _configurations.Enqueue(_configurationCollection.ResolveOnException(_lastThrownException));
             }
+
+            AppDomain.CurrentDomain.FirstChanceException -= CurrentDomain_FirstChanceException;
         }
 
         private void CurrentDomain_FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
-            => _scopeComplete = false;
+        {
+            _scopeComplete = false;
+            _lastThrownException = e.Exception;
+        }
     }
 }

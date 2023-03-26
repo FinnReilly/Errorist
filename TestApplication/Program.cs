@@ -14,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddErrorConfiguration<ApiExceptionDto>();
 builder.Services.AddScoped<IService, Service>();
+builder.Services.AddScoped<IServiceWithTryCatch,  ServiceWithTryCatch>();
 builder.Services.AddSingleton<ISingletonService, SingletonService>();
 
 var app = builder.Build();

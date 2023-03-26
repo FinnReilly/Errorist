@@ -15,7 +15,7 @@ namespace Errorist.Test.Implementations
         [SetUp]
         public void Setup()
         {
-            _globalConfiguration = new ExceptionScopeConfiguration<TestOutputType>();
+            _globalConfiguration = ExceptionScopeConfiguration<TestOutputType>.AsGlobal();
             _globalScope = new Mock<IExceptionFormattingGlobalScope<TestOutputType>>();
             _globalScope.Setup(scope => scope.Configuration).Returns(_globalConfiguration).Verifiable();
 
@@ -26,8 +26,8 @@ namespace Errorist.Test.Implementations
         public void Enqueue_IncreasesCount()
         {
             // Arrange
-            var enqueued_1 = new ExceptionScopeConfiguration<TestOutputType>();
-            var enqueued_2 = new ExceptionScopeConfiguration<TestOutputType>();
+            var enqueued_1 = ExceptionScopeConfiguration<TestOutputType>.AsGlobal();
+            var enqueued_2 = ExceptionScopeConfiguration<TestOutputType>.AsGlobal();
             var initialCount = _sut.Count;
 
             // Act
@@ -46,8 +46,8 @@ namespace Errorist.Test.Implementations
         public void Dequeue_WhenItemsInQueue_DecrementsCountAndReturnsLastInputLast()
         {
             // Arrange
-            var enqueued_1 = new ExceptionScopeConfiguration<TestOutputType>();
-            var enqueued_2 = new ExceptionScopeConfiguration<TestOutputType>();
+            var enqueued_1 = ExceptionScopeConfiguration<TestOutputType>.AsGlobal();
+            var enqueued_2 = ExceptionScopeConfiguration<TestOutputType>.AsGlobal();
             _sut.Enqueue(enqueued_1);
             _sut.Enqueue(enqueued_2);
             var countAfterEnqueues = _sut.Count;
